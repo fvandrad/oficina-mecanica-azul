@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/oficina-mecanica-azul-www/",
+  base: "/oficina-mecanica-azul/",
   plugins: [vue()],
   server: {
     host: true,
