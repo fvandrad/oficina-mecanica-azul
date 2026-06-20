@@ -5,6 +5,10 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   base: "/oficina-mecanica-azul/",
   plugins: [vue()],
+  build: {
+    outDir: 'docs',
+    emptyOutDir: true
+  },
   server: {
     host: true,
     port: 5173,
