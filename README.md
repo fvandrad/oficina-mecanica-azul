@@ -217,6 +217,17 @@ Código totalmente tipado em TypeScript, garantindo maior segurança e produtivi
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
+## 💖 Apoie este projeto
+Se você gostou deste projeto e gostaria de apoiar seu desenvolvimento, considere fazer uma doação. 
+
+- [Apoie através do GitHub Sponsors](https://github.com/sponsors/fvandrad) 
+
+### 🇧🇷 Apoio Direto via Pix
+Se você está no Brasil e quer me pagar um café de forma rápida, pode enviar qualquer valor via Pix:
+* **Chave Pix (Celular):** `1992891621`
+* **Instituição:** NU PAGAMENTOS - IP (Nubank)
+* **Nome do Beneficiário:** Fernando Vanderlei de Andrade
+
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
