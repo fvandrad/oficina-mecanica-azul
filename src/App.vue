@@ -16,7 +16,7 @@
           </div>
           <!-- Botão de Instalação PWA -->
           <div class="flex items-center">
-            <button v-if="showInstallBtn" @click="instalarApp"
+            <button @click="instalarApp"
               class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1.5 px-4 rounded-lg flex items-center space-x-2 transition duration-150 ease-in-out shadow-md hover:shadow-lg text-sm">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -109,6 +109,41 @@
         </div>
       </div>
     </div>
+    <!-- Modal de Ajuda para Instalação -->
+    <div v-if="showHelpModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+      <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl relative text-gray-800">
+        <button @click="showHelpModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Instalação do Aplicativo</span>
+        </h3>
+        <div class="space-y-4 text-sm text-gray-600">
+          <p>O aplicativo pode ser instalado no seu computador ou celular para funcionar offline e com acesso rápido.</p>
+          
+          <div class="border-t border-gray-100 pt-3">
+            <h4 class="font-semibold text-gray-800 mb-1">Computador / Android (Chrome ou Edge)</h4>
+            <p>Aguarde alguns segundos para o navegador carregar a instalação. Se o prompt automático não abrir, procure pelo ícone de instalação <span class="font-semibold text-blue-600">⊕</span> na barra de endereços do seu navegador.</p>
+          </div>
+
+          <div class="border-t border-gray-100 pt-3">
+            <h4 class="font-semibold text-gray-800 mb-1">iPhone / iPad (Safari)</h4>
+            <p>1. Toque no botão de <strong>Compartilhar</strong> (ícone de quadrado com seta para cima).</p>
+            <p>2. Selecione a opção <strong>"Adicionar à Tela de Início"</strong>.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button @click="showHelpModal = false" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition duration-150">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -168,6 +203,7 @@ const selecionarVeiculo = (veiculo: Veiculo) => {
 // Gerenciamento de instalação PWA
 const deferredPrompt = ref<any | null>(null);
 const showInstallBtn = ref(false);
+const showHelpModal = ref(false);
 
 const handleBeforeInstallPrompt = (e: Event) => {
   e.preventDefault();
@@ -182,7 +218,10 @@ const handleAppInstalled = () => {
 };
 
 const instalarApp = async () => {
-  if (!deferredPrompt.value) return;
+  if (!deferredPrompt.value) {
+    showHelpModal.value = true;
+    return;
+  }
   deferredPrompt.value.prompt();
   const { outcome } = await deferredPrompt.value.userChoice;
   console.log(`Resposta do usuário para a instalação: ${outcome}`);
