@@ -14,6 +14,16 @@
               <h1 class="text-xl font-bold">Oficina Mecânica</h1>
             </div>
           </div>
+          <!-- Botão de Instalação PWA -->
+          <div class="flex items-center">
+            <button v-if="showInstallBtn" @click="instalarApp"
+              class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1.5 px-4 rounded-lg flex items-center space-x-2 transition duration-150 ease-in-out shadow-md hover:shadow-lg text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span>Instalar App</span>
+            </button>
+          </div>
         </div>
       </div>
     </nav>
@@ -103,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { db } from './services/db';
 import type { Veiculo, Cliente } from './services/db';
 import ClientesList from './components/ClientesList.vue';
@@ -155,7 +165,37 @@ const selecionarVeiculo = (veiculo: Veiculo) => {
   activeTab.value = 'ordens';
 };
 
+// Gerenciamento de instalação PWA
+const deferredPrompt = ref<any | null>(null);
+const showInstallBtn = ref(false);
+
+const handleBeforeInstallPrompt = (e: Event) => {
+  e.preventDefault();
+  deferredPrompt.value = e;
+  showInstallBtn.value = true;
+};
+
+const handleAppInstalled = () => {
+  deferredPrompt.value = null;
+  showInstallBtn.value = false;
+  console.log('Aplicativo instalado com sucesso!');
+};
+
+const instalarApp = async () => {
+  if (!deferredPrompt.value) return;
+  deferredPrompt.value.prompt();
+  const { outcome } = await deferredPrompt.value.userChoice;
+  console.log(`Resposta do usuário para a instalação: ${outcome}`);
+  if (outcome === 'accepted') {
+    deferredPrompt.value = null;
+    showInstallBtn.value = false;
+  }
+};
+
 onMounted(async () => {
+  window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  window.addEventListener('appinstalled', handleAppInstalled);
+
   try {
     // Apenas inicializa o banco de dados
     await db.init();
@@ -163,6 +203,11 @@ onMounted(async () => {
   } catch (error) {
     console.error('Erro ao inicializar banco de dados:', error);
   }
+});
+
+onUnmounted(() => {
+  window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  window.removeEventListener('appinstalled', handleAppInstalled);
 });
 </script>
 
